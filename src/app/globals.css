@@ -1,26 +1,48 @@
-@import "tailwindcss";
-
+/* Premium color palette for Svaki dinar */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f8fafc;
+  --bg-subtle: #f1f5f9;
+  --card: #ffffff;
+  --card-hover: #f8fafc;
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #1e293b;
+  --accent-hover: #334155;
+  --danger: #b42318;
+  --success: #059669;
+  --warning: #d97706;
+  --info: #0891b2;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dark mode using [data-theme] attribute */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-subtle: #1e293b;
+  --card: #1e293b;
+  --card-hover: #0f172a;
+  --foreground: #f8fafc;
+  --muted: #94a3b8;
+  --border: #334155;
+  --accent: #f1f5f9;
+  --accent-hover: #e2e8f0;
+  --danger: #f87171;
+  --success: #10b981;
+  --warning: #f6ad55;
+  --info: #67e8f9;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *[class*="transition-"],
+  .kartica,
+  .btn-primary,
+  .btn-ghost,
+  .btn-danger {
+    transition: none !important;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
