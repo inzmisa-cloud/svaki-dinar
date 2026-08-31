@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const STAVKE = [
   { href: "/", label: "Pregled" },
@@ -16,14 +16,21 @@ const STAVKE = [
 
 export function Navigacija() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isDark = JSON.parse(localStorage.getItem("svaki-dinar-dark") || "false");
+  const [isDark, setIsDark] = React.useState(false);
 
   React.useEffect(() => {
-    if (isDark !== (window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      localStorage.setItem("svaki-dinar-dark", window.matchMedia("(prefers-color-scheme: dark)").matches ? "true" : "false");
-      document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
-      document.documentElement.setAttribute("data-theme", window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    setIsDark(
+      JSON.parse(localStorage.getItem("svaki-dinar-dark") || "false"),
+    );
+  }, []);
+
+  React.useEffect(() => {
+    const matched = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (isDark !== matched) {
+      const novi = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      localStorage.setItem("svaki-dinar-dark", novi ? "true" : "false");
+      document.documentElement.classList.toggle("dark", novi);
+      document.documentElement.setAttribute("data-theme", novi ? "dark" : "light");
     }
   }, [isDark]);
 
@@ -69,7 +76,8 @@ export function Navigacija() {
       <div className="mt-4 flex items-center gap-2 md:hidden">
         <button
           onClick={() => {
-            const newDark = !document.documentElement.classList.contains("dark");
+            const newDark = !isDark;
+            setIsDark(newDark);
             document.documentElement.classList.toggle("dark", newDark);
             document.documentElement.setAttribute("data-theme", newDark ? "dark" : "light");
             localStorage.setItem("svaki-dinar-dark", newDark ? "true" : "false");
@@ -77,7 +85,7 @@ export function Navigacija() {
           className="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-200 transition-colors"
           aria-label="Toggle dark mode"
         >
-          {document.documentElement.classList.contains("dark") ? "☀️" : "🌙"}
+          {isDark ? "☀️" : "🌙"}
         </button>
       </div>
     </>

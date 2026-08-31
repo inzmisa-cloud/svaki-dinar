@@ -1,7 +1,7 @@
-import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import { kategorije, racuni } from "./schema";
 
-type Db = BetterSQLite3Database<{
+type Db = LibSQLDatabase<{
   racuni: typeof racuni;
   kategorije: typeof kategorije;
 }>;
@@ -25,24 +25,20 @@ const KATEGORIJE_RASHOD: Array<{ naziv: string; boja: string }> = [
   { naziv: "Ostali rashodi", boja: "#64748b" },
 ];
 
-export function ensureSeed(db: Db): void {
-  const postojiRacun = db.select().from(racuni).limit(1).all();
+export async function ensureSeed(db: Db): Promise<void> {
+  const postojiRacun = await db.select().from(racuni).limit(1);
   if (postojiRacun.length === 0) {
-    db.insert(racuni)
-      .values([
-        { naziv: "Gotovina", tip: "kes", pocetnoStanjePara: 0 },
-        { naziv: "Tekući račun", tip: "tekuci", pocetnoStanjePara: 0 },
-      ])
-      .run();
+    await db.insert(racuni).values([
+      { naziv: "Gotovina", tip: "kes", pocetnoStanjePara: 0 },
+      { naziv: "Tekući račun", tip: "tekuci", pocetnoStanjePara: 0 },
+    ]);
   }
 
-  const postojeKategorije = db.select().from(kategorije).limit(1).all();
+  const postojeKategorije = await db.select().from(kategorije).limit(1);
   if (postojeKategorije.length === 0) {
-    db.insert(kategorije)
-      .values([
-        ...KATEGORIJE_PRIHOD.map((k) => ({ ...k, tip: "prihod" })),
-        ...KATEGORIJE_RASHOD.map((k) => ({ ...k, tip: "rashod" })),
-      ])
-      .run();
+    await db.insert(kategorije).values([
+      ...KATEGORIJE_PRIHOD.map((k) => ({ ...k, tip: "prihod" })),
+      ...KATEGORIJE_RASHOD.map((k) => ({ ...k, tip: "rashod" })),
+    ]);
   }
 }

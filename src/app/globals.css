@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Premium color palette for Svaki dinar */
 :root {
   --bg: #f8fafc;
@@ -31,10 +33,6 @@
   --warning: #f6ad55;
   --info: #67e8f9;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

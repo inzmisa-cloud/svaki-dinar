@@ -10,17 +10,18 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
+    "@libsql/client": "^0.17.4",
+    "@tailwindcss/postcss": "^4.3.3",
     "date-fns": "^4.4.0",
     "drizzle-orm": "^0.45.2",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "recharts": "^3.10.1",
+    "tailwindcss": "^4.3.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

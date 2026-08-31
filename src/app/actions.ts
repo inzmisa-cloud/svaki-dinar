@@ -196,25 +196,22 @@ export async function platiRatu(formData: FormData): Promise<void> {
   if (!racunId) return;
 
   const novaPlacena = k.placenoRata + 1;
-  await db.transaction((tx) => {
-    tx.insert(transakcije)
-      .values({
-        racunId,
-        kategorijaId: kat.id,
-        kreditId: k.id,
-        tip: "rashod",
-        iznosPara: Number(k.rataPara),
-        datum: danas(),
-        opis: `Rata ${novaPlacena}/${k.ukupnoRata} — ${k.naziv}`,
-      })
-      .run();
-    tx.update(krediti)
+  await db.transaction(async (tx) => {
+    await tx.insert(transakcije).values({
+      racunId,
+      kategorijaId: kat.id,
+      kreditId: k.id,
+      tip: "rashod",
+      iznosPara: Number(k.rataPara),
+      datum: danas(),
+      opis: `Rata ${novaPlacena}/${k.ukupnoRata} — ${k.naziv}`,
+    });
+    await tx.update(krediti)
       .set({
         placenoRata: novaPlacena,
         aktivan: novaPlacena < k.ukupnoRata ? true : false,
       })
-      .where(eq(krediti.id, k.id))
-      .run();
+      .where(eq(krediti.id, k.id));
   });
 
   revalidujSve();
