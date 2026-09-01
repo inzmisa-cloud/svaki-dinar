@@ -65,9 +65,15 @@ export default async function PonavljajucePage() {
         <Sekcija
           naslov={`Spisak (${stavke.length})`}
           akcija={
-            <span className="text-xs tabular-nums text-slate-500">
-              mesečno: <span className="font-medium text-green-600">+{formatRSD(mesecniPrihod)}</span>{" "}
-              / <span className="font-medium text-red-600">−{formatRSD(mesecniRashod)}</span>
+            <span className="text-xs tabular-nums text-slate-400 dark:text-slate-500">
+              mesečno:{" "}
+              <span className="font-medium text-emerald-600 dark:text-emerald-400">
+                +{formatRSD(mesecniPrihod)}
+              </span>{" "}
+              /{" "}
+              <span className="font-medium text-rose-600 dark:text-rose-400">
+                −{formatRSD(mesecniRashod)}
+              </span>
             </span>
           }
         >
@@ -78,23 +84,23 @@ export default async function PonavljajucePage() {
               {stavke.map((s) => (
                 <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium">
+                    <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
                       {s.naziv}
                       {!s.aktivan ? (
-                        <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500">
+                        <span className="inline-block rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                           pauzirano
                         </span>
                       ) : unete.has(s.id) ? (
-                        <span className="ml-2 rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-green-700">
+                        <span className="inline-block rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
                           uneto
                         </span>
                       ) : (
-                        <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-700">
+                        <span className="inline-block rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
                           čeka unos
                         </span>
                       )}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
                       {s.danUMesecu}. u mesecu · {s.kategorijaNaziv ?? "bez kategorije"} ·{" "}
                       {s.racunNaziv ?? "prvi aktivan račun"}
                     </p>
@@ -102,7 +108,7 @@ export default async function PonavljajucePage() {
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-sm font-semibold tabular-nums ${
-                        s.tip === "prihod" ? "text-green-600" : "text-red-600"
+                        s.tip === "prihod" ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
                       }`}
                     >
                       {s.tip === "prihod" ? "+" : "−"}
@@ -117,8 +123,15 @@ export default async function PonavljajucePage() {
                     </form>
                     <form action={obrisiStalnu}>
                       <input type="hidden" name="id" value={s.id} />
-                      <button type="submit" className="btn-danger">
-                        Obriši
+                      <button
+                        type="submit"
+                        className="rounded-lg p-2 text-slate-300 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:text-slate-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
+                        aria-label="Obriši"
+                        title="Obriši"
+                      >
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        </svg>
                       </button>
                     </form>
                   </div>

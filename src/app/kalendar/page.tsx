@@ -127,13 +127,13 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
         <Sekcija naslov={formatMesec(mesec)}>
           <div className="grid grid-cols-7 gap-1.5">
             {DANI_U_NEDELJI.map((d) => (
-              <div key={d} className="pb-1 text-center text-xs font-semibold uppercase text-slate-400">
+              <div key={d} className="pb-1.5 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 {d}
               </div>
             ))}
             {celije.map((c, i) => {
               if (!c.datum || !c.dan) {
-                return <div key={`prazno-${i}`} className="min-h-24 rounded-lg bg-slate-50/50" />;
+                return <div key={`prazno-${i}`} className="min-h-24 rounded-xl bg-slate-50/40 dark:bg-slate-800/20" />;
               }
               const s = poDanu.get(c.datum);
               const planovi = planPoDanu.get(c.dan) ?? [];
@@ -143,32 +143,38 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
                 <Link
                   key={c.datum}
                   href={`/kalendar?mesec=${mesec}&dan=${c.datum}`}
-                  className={`min-h-24 rounded-lg border p-1.5 transition-colors ${
+                  className={`group flex min-h-24 flex-col rounded-xl border p-1.5 transition-all duration-200 ${
                     jeIzabran
-                      ? "border-slate-900 bg-slate-900/[0.03]"
-                      : "border-slate-200 hover:border-slate-400"
+                      ? "hero-gradient border-transparent shadow-lg shadow-brand-500/25"
+                      : "border-slate-200/70 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md dark:border-slate-800 dark:hover:border-brand-500"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
-                      className={`inline-flex size-5 items-center justify-center rounded-full text-xs font-semibold tabular-nums ${
-                        jeDanas ? "bg-slate-900 text-white" : "text-slate-600"
+                      className={`inline-flex size-5.5 items-center justify-center rounded-full text-xs font-semibold tabular-nums ${
+                        jeDanas
+                          ? "bg-brand-500 text-white shadow-sm"
+                          : jeIzabran
+                            ? "text-white"
+                            : "text-slate-600 dark:text-slate-300"
                       }`}
                     >
                       {c.dan}
                     </span>
                     {s && s.broj > 0 ? (
-                      <span className="text-[10px] text-slate-400">{s.broj}</span>
+                      <span className={`text-[10px] tabular-nums ${jeIzabran ? "text-white/70" : "text-slate-400"}`}>
+                        {s.broj}
+                      </span>
                     ) : null}
                   </div>
                   <div className="mt-1 space-y-0.5">
                     {s && s.prihod > 0 ? (
-                      <p className="truncate text-[10px] font-medium tabular-nums text-green-600">
+                      <p className={`truncate text-[10px] font-medium tabular-nums ${jeIzabran ? "text-white" : "text-emerald-600 dark:text-emerald-400"}`}>
                         +{formatRSD(s.prihod)}
                       </p>
                     ) : null}
                     {s && s.rashod > 0 ? (
-                      <p className="truncate text-[10px] font-medium tabular-nums text-red-600">
+                      <p className={`truncate text-[10px] font-medium tabular-nums ${jeIzabran ? "text-white" : "text-rose-600 dark:text-rose-400"}`}>
                         −{formatRSD(s.rashod)}
                       </p>
                     ) : null}
@@ -176,9 +182,7 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
                       <p
                         key={idx}
                         className={`truncate text-[10px] tabular-nums ${
-                          p.tip === "prihod"
-                            ? "text-green-400"
-                            : "text-red-400"
+                          jeIzabran ? "text-white/80" : p.tip === "prihod" ? "text-emerald-400 dark:text-emerald-500" : "text-rose-400 dark:text-rose-500"
                         }`}
                         title={`${p.naziv} (${formatRSD(p.iznosPara)})`}
                       >
@@ -190,15 +194,15 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
               );
             })}
           </div>
-          <p className="mt-3 text-xs text-slate-400">
+          <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
             Svetli crveni/zeleni redovi su planirane stavke (rate i ponavljajući) koje još nisu unete.
           </p>
         </Sekcija>
 
         {izabraniDan && (
           <Sekcija naslov={`Detalji: ${formatDatum(izabraniDan)}`}>
-            <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50/60 p-4">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <div className="mb-5 rounded-2xl border border-slate-100 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-800/30">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
                 Dodaj transakciju za ovaj dan
               </p>
               <FormaTransakcije
@@ -217,19 +221,26 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
               <Prazno tekst="Nema transakcija ni planiranih stavki za ovaj dan." />
             ) : (
               <>
-                <ul className="divide-y divide-slate-100">
+                <ul className="divide-y divide-slate-100/80 dark:divide-slate-800/70">
                   {(detaljiDana.get(izabraniDan) ?? []).map((t) => (
                     <li key={t.id} className="flex items-center justify-between gap-3 py-2.5">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">{t.opis || t.kategorijaNaziv || "—"}</p>
-                        <p className="text-xs text-slate-500">
-                          {t.racunNaziv}
-                          {t.kategorijaNaziv ? ` · ${t.kategorijaNaziv}` : ""}
-                        </p>
+                      <div className="flex min-w-0 items-center gap-2.5">
+                        <span
+                          className={`size-2 shrink-0 rounded-full ${
+                            t.tip === "prihod" ? "bg-emerald-500" : "bg-rose-500"
+                          }`}
+                        />
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">{t.opis || t.kategorijaNaziv || "—"}</p>
+                          <p className="text-xs text-slate-400 dark:text-slate-500">
+                            {t.racunNaziv}
+                            {t.kategorijaNaziv ? ` · ${t.kategorijaNaziv}` : ""}
+                          </p>
+                        </div>
                       </div>
                       <p
                         className={`shrink-0 text-sm font-semibold tabular-nums ${
-                          t.tip === "prihod" ? "text-green-600" : "text-red-600"
+                          t.tip === "prihod" ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         {t.tip === "prihod" ? "+" : "−"}
@@ -239,10 +250,12 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
                   ))}
                   {(planPoDanu.get(Number(izabraniDan.split("-")[2])) ?? []).map((p, i) => (
                     <li key={`plan-${i}`} className="flex items-center justify-between gap-3 py-2.5">
-                      <p className="text-sm italic text-slate-500">{p.naziv} (planirano)</p>
+                      <p className="text-sm italic text-slate-400 dark:text-slate-500">
+                        ◦ {p.naziv} <span className="not-italic text-[10px] uppercase text-slate-400">(planirano)</span>
+                      </p>
                       <p
                         className={`shrink-0 text-sm font-medium tabular-nums ${
-                          p.tip === "prihod" ? "text-green-400" : "text-red-400"
+                          p.tip === "prihod" ? "text-emerald-400 dark:text-emerald-500" : "text-rose-400 dark:text-rose-500"
                         }`}
                       >
                         {p.tip === "prihod" ? "+" : "−"}
@@ -251,8 +264,8 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 flex gap-4 border-t border-slate-100 pt-3 text-sm">
-                  <span className="tabular-nums text-green-600">
+                <div className="mt-3 flex gap-5 border-t border-slate-100 pt-3 text-sm dark:border-slate-800">
+                  <span className="tabular-nums text-emerald-600 dark:text-emerald-400">
                     Prihod:{" "}
                     {formatRSD(
                       (detaljiDana.get(izabraniDan) ?? [])
@@ -260,7 +273,7 @@ export default async function KalendarPage({ searchParams }: { searchParams: Sea
                         .reduce((sum, t) => sum + t.iznosPara, 0),
                     )}
                   </span>
-                  <span className="tabular-nums text-red-600">
+                  <span className="tabular-nums text-rose-600 dark:text-rose-400">
                     Rashod:{" "}
                     {formatRSD(
                       (detaljiDana.get(izabraniDan) ?? [])

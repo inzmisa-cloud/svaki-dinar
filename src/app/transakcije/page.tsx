@@ -75,37 +75,37 @@ export default async function TransakcijePage({ searchParams }: { searchParams: 
             </form>
           </Sekcija>
 
-          <Sekcija naslov={`Spisak (${redovi.length})`}>
+          <Sekcija naslov="Spisak">
             {redovi.length === 0 ? (
               <Prazno tekst="Nema transakcija za izabrane filtere." />
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm rounded-xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50">
+              <div className="-mx-5 -mb-5 overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200/50 dark:border-slate-700/50 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                      <th className="py-3 pr-4 font-medium">Datum</th>
-                      <th className="py-3 pr-4 font-medium">Opis</th>
-                      <th className="py-3 pr-4 font-medium">Kategorija</th>
-                      <th className="py-3 pr-4 font-medium">Račun</th>
-                      <th className="py-3 text-right font-medium">Iznos</th>
-                      <th className="py-3 font-medium"></th>
+                    <tr className="border-b border-slate-100 dark:border-slate-800 text-left text-xs uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                      <th className="bg-slate-50/60 px-5 py-3 font-semibold dark:bg-slate-800/40">Datum</th>
+                      <th className="bg-slate-50/60 px-4 py-3 font-semibold dark:bg-slate-800/40">Opis</th>
+                      <th className="bg-slate-50/60 px-4 py-3 font-semibold dark:bg-slate-800/40">Kategorija</th>
+                      <th className="bg-slate-50/60 px-4 py-3 font-semibold dark:bg-slate-800/40">Račun</th>
+                      <th className="bg-slate-50/60 px-4 py-3 text-right font-semibold dark:bg-slate-800/40">Iznos</th>
+                      <th className="bg-slate-50/60 px-5 py-3 font-semibold dark:bg-slate-800/40"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100/50 dark:bg-slate-900/50">
+                  <tbody className="divide-y divide-slate-100/80 dark:divide-slate-800/70">
                     {redovi.map((t) => (
-                      <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/50">
-                        <td className="whitespace-nowrap py-3 pr-4 tabular-nums text-slate-600 dark:text-slate-400">
+                      <tr key={t.id} className="transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/30">
+                        <td className="whitespace-nowrap px-5 py-3 tabular-nums text-slate-500 dark:text-slate-400">
                           {formatDatum(t.datum)}
                         </td>
-                        <td className="max-w-[18rem] truncate py-3 pr-4 font-medium">
+                        <td className="max-w-[16rem] truncate px-4 py-3 font-medium">
                           {t.opis || "—"}
                           {t.kreditId ? (
-                            <span className="ml-1.5 rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-red-700">
+                            <span className="ml-2 inline-block rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase leading-none text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
                               rata
                             </span>
                           ) : null}
                         </td>
-                        <td className="py-3 pr-4">
+                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                           {t.kategorijaNaziv ? (
                             <span className="inline-flex items-center gap-1.5">
                               <span
@@ -118,20 +118,29 @@ export default async function TransakcijePage({ searchParams }: { searchParams: 
                             "—"
                           )}
                         </td>
-                        <td className="py-3 pr-4 text-slate-600 dark:text-slate-400">{t.racunNaziv}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{t.racunNaziv}</td>
                         <td
-                          className={`whitespace-nowrap py-3 pr-4 text-right font-semibold tabular-nums ${
-                            t.tip === "prihod" ? "text-green-600" : "text-red-600"
+                          className={`whitespace-nowrap px-4 py-3 text-right font-semibold tabular-nums ${
+                            t.tip === "prihod"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-rose-600 dark:text-rose-400"
                           }`}
                         >
                           {t.tip === "prihod" ? "+" : "−"}
                           {formatRSD(t.iznosPara)}
                         </td>
-                        <td className="py-3 text-right">
+                        <td className="px-5 py-3 text-right">
                           <form action={obrisiTransakciju}>
                             <input type="hidden" name="id" value={t.id} />
-                            <button type="submit" className="btn-danger">
-                              Obriši
+                            <button
+                              type="submit"
+                              className="rounded-lg p-1.5 text-slate-300 transition-colors hover:bg-rose-50 hover:text-rose-600 dark:text-slate-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
+                              aria-label="Obriši"
+                              title="Obriši"
+                            >
+                              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                              </svg>
                             </button>
                           </form>
                         </td>
@@ -144,13 +153,47 @@ export default async function TransakcijePage({ searchParams }: { searchParams: 
           </Sekcija>
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="space-y-6">
           <Sekcija naslov="Statistika">
-            <div className="mt-4">
-              <p className="text-xs font-medium text-slate-500">Ukupni prihodi</p>
-              <p className="text-2xl font-bold tabular-nums text-green-600">{formatRSD(redovi.filter((t) => t.tip === "prihod").reduce((s, t) => s + t.iznosPara, 0))}</p>
-              <p className="text-xs font-medium text-slate-500">Ukupni rashodi</p>
-              <p className="text-2xl font-bold tabular-nums text-red-600">{formatRSD(redovi.filter((t) => t.tip === "rashod").reduce((s, t) => s + t.iznosPara, 0))}</p>
+            <div className="space-y-6">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                  Ukupni prihodi
+                </p>
+                <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400">
+                  +{formatRSD(redovi.filter((t) => t.tip === "prihod").reduce((s, t) => s + t.iznosPara, 0))}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                  Ukupni rashodi
+                </p>
+                <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight text-rose-600 dark:text-rose-400">
+                  −{formatRSD(redovi.filter((t) => t.tip === "rashod").reduce((s, t) => s + t.iznosPara, 0))}
+                </p>
+              </div>
+              <div className="h-px bg-slate-100 dark:bg-slate-800" />
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                  Neto
+                </p>
+                {(() => {
+                  const neto = redovi.filter((t) => t.tip === "prihod").reduce((s, t) => s + t.iznosPara, 0) -
+                    redovi.filter((t) => t.tip === "rashod").reduce((s, t) => s + t.iznosPara, 0);
+                  return (
+                    <p
+                      className={`mt-1 text-3xl font-bold tabular-nums tracking-tight ${
+                        neto < 0
+                          ? "text-rose-600 dark:text-rose-400"
+                          : "text-slate-900 dark:text-white"
+                      }`}
+                    >
+                      {neto < 0 ? "−" : "+"}
+                      {formatRSD(Math.abs(neto))}
+                    </p>
+                  );
+                })()}
+              </div>
             </div>
           </Sekcija>
         </div>

@@ -50,41 +50,44 @@ export default async function IzvestajiPage() {
             {poMesecima.length === 0 ? (
               <Prazno tekst="Nema podataka." />
             ) : (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
-                    <th className="py-2 pr-3 font-medium">Mesec</th>
-                    <th className="py-2 pr-3 text-right font-medium">Prihod</th>
-                    <th className="py-2 pr-3 text-right font-medium">Rashod</th>
-                    <th className="py-2 text-right font-medium">Neto</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {poMesecima.map((m) => {
-                    const neto = m.prihod - m.rashod;
-                    return (
-                      <tr key={m.mesec}>
-                        <td className="py-2.5 pr-3 font-medium">{formatMesec(m.mesec)}</td>
-                        <td className="py-2.5 pr-3 text-right tabular-nums text-green-600">
-                          {formatRSD(m.prihod)}
-                        </td>
-                        <td className="py-2.5 pr-3 text-right tabular-nums text-red-600">
-                          {formatRSD(m.rashod)}
-                        </td>
-                        <td
-                          className={`py-2.5 text-right font-semibold tabular-nums ${
-                            neto < 0 ? "text-red-600" : ""
-                          }`}
-                        >
-                          {formatRSD(neto)}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="-mx-5 -mb-5 overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-left text-xs uppercase tracking-wide text-slate-400 dark:border-slate-800 dark:text-slate-500">
+                      <th className="bg-slate-50/60 px-5 py-3 font-semibold dark:bg-slate-800/40">Mesec</th>
+                      <th className="bg-slate-50/60 px-4 py-3 text-right font-semibold dark:bg-slate-800/40">Prihod</th>
+                      <th className="bg-slate-50/60 px-4 py-3 text-right font-semibold dark:bg-slate-800/40">Rashod</th>
+                      <th className="bg-slate-50/60 px-5 py-3 text-right font-semibold dark:bg-slate-800/40">Neto</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100/80 dark:divide-slate-800/70">
+                    {poMesecima.map((m) => {
+                      const neto = m.prihod - m.rashod;
+                      return (
+                        <tr key={m.mesec} className="transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/30">
+                          <td className="px-5 py-3 font-medium">{formatMesec(m.mesec)}</td>
+                          <td className="px-4 py-3 text-right tabular-nums text-emerald-600 dark:text-emerald-400">
+                            +{formatRSD(m.prihod)}
+                          </td>
+                          <td className="px-4 py-3 text-right tabular-nums text-rose-600 dark:text-rose-400">
+                            −{formatRSD(m.rashod)}
+                          </td>
+                          <td
+                            className={`px-5 py-3 text-right font-semibold tabular-nums ${
+                              neto < 0 ? "text-rose-600 dark:text-rose-400" : "text-slate-900 dark:text-white"
+                            }`}
+                          >
+                            {neto < 0 ? "−" : "+"}
+                            {formatRSD(Math.abs(neto))}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
-            <p className="mt-3 text-xs text-slate-500">
+            <p className="mt-4 text-xs text-slate-400 dark:text-slate-500">
               Cilj: stopa štednje iznad 20% svakog meseca dok traje otplata kredita.
             </p>
           </Sekcija>
